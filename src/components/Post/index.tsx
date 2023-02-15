@@ -1,5 +1,7 @@
 import styles from './index.module.css'
 
+import Comment from '../Comment'
+
 type PostProps = {
   author: string
   content: string
@@ -42,6 +44,12 @@ export default function Post({ author, content }: PostProps) {
           <button type="submit">Publicar</button>
         </footer>
       </form>
+
+      <div className={styles.commentList}>
+        <Comment />
+        <Comment />
+        <Comment />
+      </div>
     </article>
   )
 }
