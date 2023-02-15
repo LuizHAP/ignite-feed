@@ -5,7 +5,7 @@ type HeaderProps = {
   content: string
 }
 
-export default function Header({ author, content }: HeaderProps) {
+export default function Post({ author, content }: HeaderProps) {
   return (
     <div>
       <strong>{author}</strong>
