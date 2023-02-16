@@ -1,6 +1,7 @@
 import styles from './index.module.css'
 
 import Comment from '../Comment'
+import Avatar from '../Avatar'
 
 type PostProps = {
   author: string
@@ -12,7 +13,7 @@ export default function Post({ author, content }: PostProps) {
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <img src="https://github.com/luizhap.png" />
+          <Avatar src="https://github.com/luizhap.png" />
           <div className={styles.authorInfo}>
             <strong>{author}</strong>
             <p>{content}</p>
