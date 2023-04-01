@@ -9,99 +9,106 @@ import Avatar from '../Avatar'
 import { useState } from 'react'
 
 type PostProps = {
-  author: {
-    avatarUrl: string
-    name: string
-    role: string
-  }
-  publishedAt: Date,
-  content: {
-    type: string
-    content: string
-  }[]
+	author: {
+		avatarUrl: string
+		name: string
+		role: string
+	}
+	publishedAt: Date,
+	content: {
+		type: string
+		content: string
+	}[]
 }
 
 export default function Post({ author, publishedAt, content }: PostProps) {
-  const [comments, setComments] = useState([
-    'Post muito bacana, hein?!'
-  ])
+	const [comments, setComments] = useState([
+		'Post muito bacana, hein?!'
+	])
 
-  const [newCommentText, setNewCommentText] = useState('')
+	const [newCommentText, setNewCommentText] = useState('')
 
-  const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
-    locale: ptBR
-  })
+	const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
+		locale: ptBR
+	})
 
-  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
-    locale: ptBR,
-    addSuffix: true
-  })
+	const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+		locale: ptBR,
+		addSuffix: true
+	})
 
-  function handleCreateNewComment(e: React.ChangeEvent<HTMLFormElement>) {
-    e.preventDefault()
+	function handleCreateNewComment(e: React.ChangeEvent<HTMLFormElement>) {
+		e.preventDefault()
 
-    setComments([...comments, newCommentText])
+		setComments([...comments, newCommentText])
 
-    setNewCommentText('')
-  }
+		setNewCommentText('')
+	}
 
-  function handleNewCommentChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setNewCommentText(e.target.value)
-  }
+	function handleNewCommentChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+		e?.target.setCustomValidity('')
+		setNewCommentText(e.target.value)
+	}
 
-  function deleteComment(commentToDelete: string) {
-    const commentsWithoutDeletedOne = comments.filter((comment) => comment !== commentToDelete)
+	function deleteComment(commentToDelete: string) {
+		const commentsWithoutDeletedOne = comments.filter((comment) => comment !== commentToDelete)
 
-    setComments(commentsWithoutDeletedOne)
-  }
+		setComments(commentsWithoutDeletedOne)
+	}
 
-  return (
-    <article className={styles.post}>
-      <header>
-        <div className={styles.author}>
-          <Avatar src={author.avatarUrl} />
-          <div className={styles.authorInfo}>
-            <strong>{author.name}</strong>
-            <p>{author.role}</p>
-          </div>
-        </div>
+	function handleNewCommentInvalid(e: React.ChangeEvent<HTMLTextAreaElement>) {
+		e?.target.setCustomValidity('Esse campo é obrigatório!')
+	}
 
-        <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>{publishedDateRelativeToNow}</time>
-      </header>
+	const isNewCommentEmpty = newCommentText.length === 0
 
-      <div className={styles.content}>
-        {content.map((line) => {
-          if (line.type === 'paragraph') {
-            return <p key={line.content}>{line.content}</p>
-          }
+	return (
+		<article className={styles.post}>
+			<header>
+				<div className={styles.author}>
+					<Avatar src={author.avatarUrl} />
+					<div className={styles.authorInfo}>
+						<strong>{author.name}</strong>
+						<p>{author.role}</p>
+					</div>
+				</div>
 
-          if (line.type === 'link') {
-            return (
-              <p key={line.type}>
-                <a href={line.content}>{line.content}</a>
-              </p>
-            )
-          }
+				<time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>{publishedDateRelativeToNow}</time>
+			</header>
 
-          return null
-        })}
-      </div>
+			<div className={styles.content}>
+				{content.map((line) => {
+					if (line.type === 'paragraph') {
+						return <p key={line.content}>{line.content}</p>
+					}
 
-      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
-        <strong>Deixe seu feedback</strong>
+					if (line.type === 'link') {
+						return (
+							<p key={line.type}>
+								<a href={line.content}>{line.content}</a>
+							</p>
+						)
+					}
 
-        <textarea name="comment" placeholder="Deixe um comentário" onChange={handleNewCommentChange} value={newCommentText} />
+					return null
+				})}
+			</div>
 
-        <footer>
-          <button type="submit">Publicar</button>
-        </footer>
-      </form>
+			<form onSubmit={handleCreateNewComment} className={styles.commentForm}>
+				<strong>Deixe seu feedback</strong>
 
-      <div className={styles.commentList}>
-        {comments.map((comment) => (
-          <Comment content={comment} key={comment} onDeleteComment={deleteComment} />
-        ))}
-      </div>
-    </article>
-  )
+				<textarea name="comment" placeholder="Deixe um comentário" onChange={handleNewCommentChange} value={newCommentText} required onInvalid={handleNewCommentInvalid} />
+
+				<footer>
+					<button type="submit" disabled={isNewCommentEmpty}>Publicar</button>
+				</footer>
+			</form>
+
+			<div className={styles.commentList}>
+				{comments.map((comment) => (
+					<Comment content={comment} key={comment} onDeleteComment={deleteComment} />
+				))}
+			</div>
+		</article>
+	)
 }
