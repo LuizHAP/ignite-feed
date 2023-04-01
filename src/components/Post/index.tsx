@@ -49,6 +49,12 @@ export default function Post({ author, publishedAt, content }: PostProps) {
     setNewCommentText(e.target.value)
   }
 
+  function deleteComment(commentToDelete: string) {
+    const commentsWithoutDeletedOne = comments.filter((comment) => comment !== commentToDelete)
+
+    setComments(commentsWithoutDeletedOne)
+  }
+
   return (
     <article className={styles.post}>
       <header>
@@ -93,7 +99,7 @@ export default function Post({ author, publishedAt, content }: PostProps) {
 
       <div className={styles.commentList}>
         {comments.map((comment) => (
-          <Comment content={comment} key={comment} />
+          <Comment content={comment} key={comment} onDeleteComment={deleteComment} />
         ))}
       </div>
     </article>
