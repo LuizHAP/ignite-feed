@@ -64,14 +64,14 @@ export default function Post({ author, publishedAt, content }: PostProps) {
       </header>
 
       <div className={styles.content}>
-        {content.map((line, index) => {
+        {content.map((line) => {
           if (line.type === 'paragraph') {
-            return <p key={index}>{line.content}</p>
+            return <p key={line.content}>{line.content}</p>
           }
 
           if (line.type === 'link') {
             return (
-              <p key={index}>
+              <p key={line.type}>
                 <a href={line.content}>{line.content}</a>
               </p>
             )
@@ -92,8 +92,8 @@ export default function Post({ author, publishedAt, content }: PostProps) {
       </form>
 
       <div className={styles.commentList}>
-        {comments.map((comment, index) => (
-          <Comment content={comment} key={index} />
+        {comments.map((comment) => (
+          <Comment content={comment} key={comment} />
         ))}
       </div>
     </article>
