@@ -9,19 +9,10 @@ import Avatar from '../Avatar'
 import { useState } from 'react'
 
 type PostProps = {
-	author: {
-		avatarUrl: string
-		name: string
-		role: string
-	}
-	publishedAt: Date,
-	content: {
-		type: string
-		content: string
-	}[]
+	post: Exclude<Post, 'id'>
 }
 
-export default function Post({ author, publishedAt, content }: PostProps) {
+export default function Post({ post: { author, content, publishedAt } }: PostProps) {
 	const [comments, setComments] = useState([
 		'Post muito bacana, hein?!'
 	])
@@ -37,7 +28,7 @@ export default function Post({ author, publishedAt, content }: PostProps) {
 		addSuffix: true
 	})
 
-	function handleCreateNewComment(e: React.ChangeEvent<HTMLFormElement>) {
+	function handleCreateNewComment(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 
 		setComments([...comments, newCommentText])
@@ -56,7 +47,7 @@ export default function Post({ author, publishedAt, content }: PostProps) {
 		setComments(commentsWithoutDeletedOne)
 	}
 
-	function handleNewCommentInvalid(e: React.ChangeEvent<HTMLTextAreaElement>) {
+	function handleNewCommentInvalid(e: React.InvalidEvent<HTMLTextAreaElement>) {
 		e?.target.setCustomValidity('Esse campo é obrigatório!')
 	}
 
